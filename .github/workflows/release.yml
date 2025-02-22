@@ -1,25 +1,12 @@
 name: Create release
-
 permissions:
-  "contents": "write"
+  contents: "write"
+
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: Release Tag
-        required: true
-        type: string
+  release:
+    types: [published]
 
 jobs:
-  create-release:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Create release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release new ${{ inputs.tag }} --draft --title ${{ inputs.tag }}
-
   build-linux:
     runs-on: ubuntu-24.04
     strategy:
@@ -90,7 +77,6 @@ jobs:
   publish-artifacts:
     runs-on: ubuntu-24.04
     needs:
-      - create-release
       - build-linux
       - build-macos
       - build-windows
@@ -107,5 +93,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload ${{ inputs.tag }} target/distrib/*
+          gh release upload ${{ github.event.release.tag_name }} target/distrib/*
 
