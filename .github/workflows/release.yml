@@ -65,12 +65,11 @@ jobs:
           targets: ${{ matrix.target }}
       - name: Install deps
         run: |
-          brew install zig cargo-zigbuild tree coreutils
+          brew install zig cargo-zigbuild coreutils
 
       - name: Build ${{ matrix.target }}
         run: |
           cargo zigbuild --release --target ${{ matrix.target }}
-          tree
           ./generate_release_files.sh ${{ matrix.target }}
 
       - name: Upload artifacts
