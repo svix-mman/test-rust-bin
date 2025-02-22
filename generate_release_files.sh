@@ -7,9 +7,9 @@ if [ -z "$1" ]
 fi
 
 set -eox pipefail
-mkdir artifacts
+mkdir -p target/distrib
 
-TAR_FILE="artifacts/test-rust-bin-$1.tar.xz"
+TAR_FILE="target/distrib/test-rust-bin-$1.tar.xz"
 
 tar -czf \
     $TAR_FILE \
