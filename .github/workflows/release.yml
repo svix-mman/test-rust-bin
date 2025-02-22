@@ -1,3 +1,5 @@
+permissions:
+  "contents": "write"
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        target: ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-gnu"]
+        target: ["x86_64-unknown-linux-musl"]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -27,13 +29,13 @@ jobs:
 
       - name: Install deps
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install zig cargo-zigbuild
+          # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          # brew install zig cargo-zigbuild
 
       - name: Build ${{ matrix.target }}
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          cargo zigbuild --release --target ${{ matrix.target }}
+          # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          cargo build --release --target ${{ matrix.target }}
 
           ./generate_release_files.sh ${{ matrix.target }}
 
