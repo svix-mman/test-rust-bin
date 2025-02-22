@@ -23,7 +23,7 @@ jobs:
       - name: Create release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release new ${{ inputs.tag }} --draft
+        run: gh release new ${{ inputs.tag }} --draft --title ${{ inputs.tag }}
 
 
   build-linux:
