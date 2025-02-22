@@ -65,7 +65,7 @@ jobs:
           targets: ${{ matrix.target }}
       - name: Install deps
         run: |
-          brew install zig cargo-zigbuild
+          brew install zig cargo-zigbuild tree
 
       - name: Build ${{ matrix.target }}
         run: |
@@ -83,6 +83,15 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Build x86_64-pc-windows-msvc
+        run: |
+          cargo build --release --target x86_64-pc-windows-msvc
+          ./generate_release_files.sh x86_64-pc-windows-msvc
+
 
   publish-artifacts:
     runs-on: ubuntu-24.04
