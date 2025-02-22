@@ -65,12 +65,10 @@ jobs:
           targets: ${{ matrix.target }}
       - name: Install deps
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install zig cargo-zigbuild
 
       - name: Build ${{ matrix.target }}
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           cargo zigbuild --release --target ${{ matrix.target }}
           ./generate_release_files.sh ${{ matrix.target }}
 
