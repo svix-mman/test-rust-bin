@@ -1,8 +1,10 @@
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Release Tag
+        required: true
+        type: string
 
 
 # aarch64-apple-darwin
@@ -32,3 +34,11 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           cargo zigbuild --release --target ${{ matrix.target }}
+
+          ./generate_release_files.sh
+
+      - name: Upload files to release
+        run: |
+          gh release upload ${{ inputs.tag }} artifacts/*
+          gh release edit ${{ inputs.tag }} --draft=false
+
