@@ -70,6 +70,7 @@ jobs:
       - name: Build ${{ matrix.target }}
         run: |
           cargo zigbuild --release --target ${{ matrix.target }}
+          tree
           ./generate_release_files.sh ${{ matrix.target }}
 
       - name: Upload artifacts
@@ -79,7 +80,7 @@ jobs:
           path: target/distrib/*
 
   build-windows:
-    runs-on: ubuntu-24.04
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
 
