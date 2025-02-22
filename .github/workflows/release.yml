@@ -10,13 +10,13 @@ on:
 
 jobs:
   build-linux:
-  strategy:
-    matrix:
-      target: ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-gnu"]
-  run-on: ubuntu-24.04
-  steps:
-    - uses: actions/checkout@v4
-    - uses: dtolnay/rust-toolchain@stable
+    strategy:
+      matrix:
+        target: ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-gnu"]
+    run-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
 
-    - name: Build ${{ matrix.target }}
-      run: cargo zigbuild --release --target ${{ matrix.target }}
+      - name: Build ${{ matrix.target }}
+        run: cargo zigbuild --release --target ${{ matrix.target }}
