@@ -65,7 +65,7 @@ jobs:
           targets: ${{ matrix.target }}
       - name: Install deps
         run: |
-          brew install zig cargo-zigbuild tree sha256sum
+          brew install zig cargo-zigbuild tree coreutils
 
       - name: Build ${{ matrix.target }}
         run: |
