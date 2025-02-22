@@ -20,6 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
       - name: Install deps
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
