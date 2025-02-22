@@ -35,10 +35,9 @@ jobs:
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           cargo zigbuild --release --target ${{ matrix.target }}
 
-          ./generate_release_files.sh
+          ./generate_release_files.sh ${{ matrix.target }}
 
       - name: Upload files to release
         run: |
           gh release upload ${{ inputs.tag }} artifacts/*
-          gh release edit ${{ inputs.tag }} --draft=false
 
