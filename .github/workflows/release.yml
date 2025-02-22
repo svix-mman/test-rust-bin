@@ -16,6 +16,15 @@ on:
 # x86_64-unknown-linux-musl
 
 jobs:
+  create-release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release new ${{ inputs.tag }} --draft
+
+
   build-linux:
     runs-on: ubuntu-24.04
     strategy:
@@ -36,9 +45,24 @@ jobs:
         run: |
           # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           cargo build --release --target ${{ matrix.target }}
-
           ./generate_release_files.sh ${{ matrix.target }}
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: artifacts/*
+
+  publish-artifacts:
+    runs-on: ubuntu-24.04
+    needs:
+      - create-release
+      - build-linux
+    steps:
+      - name: Fetch local artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
       - name: Upload files to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
