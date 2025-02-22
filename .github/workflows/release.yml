@@ -25,12 +25,38 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release new ${{ inputs.tag }} --draft --title ${{ inputs.tag }}
 
+  build-macos:
+    runs-on: macos-14
+    strategy:
+      matrix:
+        target: ["aarch64-apple-darwin", "x86_64-apple-darwin"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Install deps
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install zig cargo-zigbuild
+
+      - name: Build ${{ matrix.target }}
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          cargo zigbuild --release --target ${{ matrix.target }}
+          ./generate_release_files.sh ${{ matrix.target }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ matrix.target }}
+          path: target/distrib/*
 
   build-linux:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        target: ["x86_64-unknown-linux-musl"]
+        target: ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-gnu"]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -39,13 +65,13 @@ jobs:
 
       - name: Install deps
         run: |
-          # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          # brew install zig cargo-zigbuild
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install zig cargo-zigbuild
 
       - name: Build ${{ matrix.target }}
         run: |
-          # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          cargo build --release --target ${{ matrix.target }}
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          cargo zigbuild --release --target ${{ matrix.target }}
           ./generate_release_files.sh ${{ matrix.target }}
 
       - name: Upload artifacts
