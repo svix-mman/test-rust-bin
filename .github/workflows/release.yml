@@ -26,4 +26,6 @@ jobs:
           brew install zig cargo-zigbuild
 
       - name: Build ${{ matrix.target }}
-        run: cargo zigbuild --release --target ${{ matrix.target }}
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          cargo zigbuild --release --target ${{ matrix.target }}
