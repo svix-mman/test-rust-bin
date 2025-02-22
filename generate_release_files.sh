@@ -7,11 +7,17 @@ if [ -z "$1" ]
 fi
 
 set -eox pipefail
+
+if [ "$(uname)" == "Darwin" ]; then
+  TAR_BIN="gtar"
+else
+  TAR_BIN="tar"
+fi
 mkdir -p target/distrib
 
 TAR_FILE="target/distrib/test-rust-bin-$1.tar.xz"
 
-tar -czf \
+$TAR_BIN -czf \
     $TAR_FILE \
     README.md \
     LICENSE \
