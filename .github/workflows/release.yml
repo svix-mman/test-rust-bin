@@ -1,4 +1,4 @@
-name: Create release
+name: Release
 permissions:
   contents: "write"
 
@@ -27,7 +27,7 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           cargo zigbuild --release --target ${{ matrix.target }}
-          ./generate_release_files.sh ${{ matrix.target }}
+          ./scripts/generate_release_files.sh ${{ matrix.target }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -52,7 +52,7 @@ jobs:
       - name: Build ${{ matrix.target }}
         run: |
           cargo zigbuild --release --target ${{ matrix.target }}
-          ./generate_release_files.sh ${{ matrix.target }}
+          ./scripts/generate_release_files.sh ${{ matrix.target }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -71,8 +71,13 @@ jobs:
       - name: Build x86_64-pc-windows-msvc
         run: |
           cargo build --release --target x86_64-pc-windows-msvc
-          ./generate_release_files.sh x86_64-pc-windows-msvc
+          ./scripts/generate_release_files.sh x86_64-pc-windows-msvc
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ matrix.target }}
+          path: target/distrib/*
 
   publish-artifacts:
     runs-on: ubuntu-24.04

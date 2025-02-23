@@ -13,6 +13,7 @@ if [ "$(uname)" == "Darwin" ]; then
 else
   TAR_BIN="tar"
 fi
+
 BIN_NAME="test-rust-bin"
 TAR_FILE="target/distrib/$BIN_NAME-$1.tar.xz"
 mkdir -p target/distrib
