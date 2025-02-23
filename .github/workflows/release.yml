@@ -87,7 +87,6 @@ jobs:
           pattern: artifact-*
           path: target/distrib/
           merge-multiple: true
-
       - name: Upload files to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
