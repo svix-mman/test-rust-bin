@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-BIN_NAME="test-rust-bin"
 if [ -z "$1" ]
   then
     echo "No argument supplied"
@@ -14,24 +13,26 @@ else
   TAR_BIN="tar"
 fi
 
-
-
 BIN_NAME="test-rust-bin"
-if [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-  BIN_FILE="$BIN_NAME.exe"
-  else
-  BIN_FILE="$BIN_NAME"
-fi
-
-TAR_FILE="target/distrib/$BIN_NAME-$1.tar.xz"
 mkdir -p target/distrib
 
-$TAR_BIN -czf \
-    $TAR_FILE \
+if [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+  PKG_FILENAME="$BIN_NAME-$1.zip"
+  zip -j \
+    "target/distrib/$PKG_FILENAME" \
     README.md \
-    LICENSE \
-    --transform="s|target/$1/release/$BIN_FILE|$BIN_FILE|" \
-    "target/$1/release/$BIN_FILE"
+      LICENSE \
+    "target/$1/release/$BIN_NAME.exe"
+else
+  PKG_FILENAME="$BIN_NAME-$1.tar.xz"
+  $TAR_BIN -czf \
+      "target/distrib/$PKG_FILENAME" \
+      README.md \
+      LICENSE \
+      --transform="s|target/$1/release/$BIN_NAME|$BIN_NAME|" \
+      "target/$1/release/$BIN_NAME"
+fi
 
-sha256sum $TAR_FILE > "$TAR_FILE.sha256"
+cd target/distrib
+sha256sum $PKG_FILENAME > "$PKG_FILENAME.sha256"
 
