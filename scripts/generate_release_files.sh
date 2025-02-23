@@ -18,11 +18,11 @@ mkdir -p target/distrib
 
 if [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
   PKG_FILENAME="$BIN_NAME-$1.zip"
-  zip -j \
+  7z a -tzip \
     "target/distrib/$PKG_FILENAME" \
     README.md \
-      LICENSE \
-    "target/$1/release/$BIN_NAME.exe"
+    LICENSE \
+    "./target/$1/release/$BIN_NAME.eze" -w"./target/$1/release"
 else
   PKG_FILENAME="$BIN_NAME-$1.tar.xz"
   $TAR_BIN -czf \
