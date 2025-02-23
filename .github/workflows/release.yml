@@ -57,26 +57,20 @@ jobs:
           path: target/distrib/*
 
   build-windows:
-    strategy:
-      matrix:
-        target: ["aarch64-pc-windows-msvc", "x86_64-pc-windows-msvc"]
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
-      - name: Install deps
+          targets: x86_64-pc-windows-msvc
+      - name: Build x86_64-pc-windows-msvc
         run: |
-          pip install cargo-zigbuild
-      - name: Build ${{ matrix.target }}
-        run: |
-          cargo zigbuild --release --target ${{ matrix.target }}
-          bash ./scripts/generate_release_files.sh ${{ matrix.target }}
+          cargo build --release --target x86_64-pc-windows-msvc
+          bash ./scripts/generate_release_files.sh x86_64-pc-windows-msvc
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifact-${{ matrix.target }}
+          name: artifact-x86_64-pc-windows-msvc
           path: target/distrib/*
 
   publish-artifacts:
