@@ -1,5 +1,5 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
+BIN_NAME="test-rust-bin"
 if [ -z "$1" ]
   then
     echo "No argument supplied"
@@ -14,7 +14,13 @@ else
   TAR_BIN="tar"
 fi
 
+
+
 BIN_NAME="test-rust-bin"
+if [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+  BIN_NAME="$BIN_NAME.exe"
+fi
+
 TAR_FILE="target/distrib/$BIN_NAME-$1.tar.xz"
 mkdir -p target/distrib
 
